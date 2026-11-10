@@ -20,12 +20,12 @@ export default function Login() {
 
     try {
       if (isRegister) {
-        const { data } = await api.post("/auth/register", { email, password });
+        const { data } = await api.post("/api/auth/register", { email, password });
         setSuccess(data.message);
         setIsRegister(false);
         setPassword("");
       } else {
-        const { data } = await api.post("/auth/login", { email, password });
+        const { data } = await api.post("/api/auth/login", { email, password });
         localStorage.setItem("bulkMailToken", data.token);
         localStorage.setItem("bulkMailAdmin", data.user.email);
         navigate("/");
