@@ -5,7 +5,7 @@ import User from "../models/user.js";
 
 const router = Router();
 
-router.post("/register", async (req, res) => {
+router.post("/api/auth/register", async (req, res) => {
   try {
     const email = String(req.body.email || "").trim().toLowerCase();
     const password = String(req.body.password || "");
@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/api/auth/login", async (req, res) => {
   try {
     const email = String(req.body.email || "").trim().toLowerCase();
     const password = String(req.body.password || "");

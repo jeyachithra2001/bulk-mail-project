@@ -25,7 +25,7 @@ export default function Dashboard() {
   async function loadHistory() {
     setHistoryLoading(true);
     try {
-      const { data } = await api.get("/emails/history");
+      const { data } = await api.get("/api/emails/history");
       setHistory(data.history || []);
     } catch (err) {
       if (err.response?.status === 401) logout();
@@ -50,7 +50,7 @@ export default function Dashboard() {
     if (recipients.length > 100) return setMessage({ type: "error", text: "Maximum 100 recipients per batch." });
     setLoading(true);
     try {
-      const { data } = await api.post("/emails/send", { recipients, subject, body });
+      const { data } = await api.post("/api/emails/send", { recipients, subject, body });
       setMessage({
         type: data.email.failedCount ? "warning" : "success",
         text: data.message

@@ -21,7 +21,7 @@ function createTransporter() {
   });
 }
 
-router.post("/send", requireAuth, async (req, res) => {
+router.post("/api/emails/send", requireAuth, async (req, res) => {
   try {
     const { subject, body, recipients } = req.body;
     if (!subject?.trim() || !body?.trim() || !Array.isArray(recipients)) {
@@ -91,7 +91,7 @@ router.post("/send", requireAuth, async (req, res) => {
   }
 });
 
-router.get("/history", requireAuth, async (_req, res) => {
+router.get("/api/emails/history", requireAuth, async (_req, res) => {
   try {
     const history = await Email.find().sort({ createdAt: -1 }).limit(100).lean();
     res.json({ history });
