@@ -130,7 +130,7 @@ export default function Dashboard() {
             </tbody></table></div>
           )}
         </section>
-        <footer>BulkMail <span className="brand-dot">.</span> <span>Full-stack bulk email project</span></footer>
+        <footer>BulkMail <span className="brand-dot">.</span></footer>
       </main>
     </div>
   );
