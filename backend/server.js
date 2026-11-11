@@ -8,7 +8,17 @@ import emailRoutes from "./src/routes/emailRoutes.js";
 dotenv.config();
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" , credentials: true}));
+const allowedOrigin = ["https://bulk-mail-project-mauve.vercel.app", "http://localhost:5173",]
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigin.includes(origin)) return cb(null, true)
+    cb(new Error("Not allowed by CORS"))
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Tupe", "Authorization"],
+  credentials: true
+}));
+
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/", (_req, res) => res.json({ message: "Bulk Mail API is running" }));

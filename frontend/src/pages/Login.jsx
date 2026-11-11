@@ -32,6 +32,7 @@ export default function Login() {
       }
     } catch (err) {
       setError(err.response?.data?.message || "Unable to process your request. Check the backend.");
+      console.log("Login error:", err)
     } finally {
       setLoading(false);
     }
