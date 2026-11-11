@@ -1,5 +1,5 @@
 import { Router } from "express";
-import nodemailer from "nodemailer";
+import sendMail from "../sendMail.js";
 import Email from "../models/Email.js";
 import requireAuth from "../middleware/requireAuth.js";
 
@@ -7,18 +7,6 @@ const router = Router();
 
 function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 465),
-    secure: String(process.env.SMTP_SECURE).toLowerCase() === "true",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
 }
 
 router.post("/api/emails/send", requireAuth, async (req, res) => {
@@ -47,18 +35,16 @@ router.post("/api/emails/send", requireAuth, async (req, res) => {
       });
     }
 
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      return res.status(500).json({ message: "SMTP credentials are not configured in backend/.env." });
+    if (!process.env.BREVO_API_KEY || !process.env.SENDER_EMAIL) {
+      return res.status(500).json({ message: "Brevo API key or sender email is not configured." });
     }
 
-    const transporter = createTransporter();
     const results = [];
 
     // Send individually so the app can record the status for each recipient.
     for (const recipient of uniqueRecipients) {
       try {
-        const info = await transporter.sendMail({
-          from: `"${process.env.MAIL_FROM_NAME || "Bulk Mail App"}" <${process.env.SMTP_USER}>`,
+        const info = await sendMail({
           to: recipient,
           subject: subject.trim(),
           text: body
@@ -100,7 +86,7 @@ router.get("/api/emails/history", requireAuth, async (_req, res) => {
   }
 });
 
-router.get("/history/:id", requireAuth, async (req, res) => {
+router.get("/api/emails/history/:id", requireAuth, async (req, res) => {
   try {
     const item = await Email.findById(req.params.id).lean();
     if (!item) return res.status(404).json({ message: "Email record not found." });
