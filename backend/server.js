@@ -25,6 +25,8 @@ app.get("/", (_req, res) => res.json({ message: "Bulk Mail API is running" }));
 app.use( authRoutes);
 app.use( emailRoutes);
 
+app.get("/health",(req,res)=> res.send("ok"))
+
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGODB_URI)

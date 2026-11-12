@@ -31,8 +31,13 @@ export default function Login() {
         navigate("/");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Unable to process your request. Check the backend.");
       console.log("Login error:", err)
+      if (!err.response) {
+        setError("Server is waking up (free hosting). Please wait 30-60 seconds and try again.");
+      }
+      else {
+        setError(err.response?.data?.message || "Something went wrong. Please try again")
+      }
     } finally {
       setLoading(false);
     }
